@@ -260,7 +260,10 @@ Blank (clear) the entire display.
 */
 extern void xtbsp_display_blank(void);
 
-
+/*
+sv_6266_evb set syl oupout status
+*/
+extern void set_ryl_output(int gpioNum,int value);
 
 #ifdef __cplusplus
 }

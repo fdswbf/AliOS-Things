@@ -225,6 +225,22 @@ void linkkit_key_process(input_event_t *eventinfo, void *priv_data)
     }
 }
 
+void ryl_service_event(input_event_t *eventinfo, void *priv_data)
+{
+    if (eventinfo->type != EV_RYL) {
+        return;
+    }
+    LOG("\n\nryl service event code:%d,value:%d\n", eventinfo->code,eventinfo->value);
+
+    if (eventinfo->code == 0) {
+        set_ryl_output(8,eventinfo->value);
+    } else if (eventinfo->code == 1) {
+        set_ryl_output(20,eventinfo->value);
+    } else if (eventinfo->code == 2) {
+        set_ryl_output(2,eventinfo->value);
+    }
+}
+
 #ifdef CONFIG_AOS_CLI
 static void handle_reset_cmd(char *pwbuf, int blen, int argc, char **argv)
 {
@@ -267,9 +283,11 @@ int application_start(int argc, char **argv)
     aos_set_log_level(AOS_LL_DEBUG);
 
     netmgr_init();
+    //do_awss_active();
     aos_register_event_filter(EV_KEY, linkkit_key_process, NULL);
     aos_register_event_filter(EV_WIFI, wifi_service_event, NULL);
     aos_register_event_filter(EV_YUNIO, cloud_service_event, NULL);
+    aos_register_event_filter(EV_RYL, ryl_service_event, NULL);
 
 #ifdef CONFIG_AOS_CLI
     aos_cli_register_command(&resetcmd);

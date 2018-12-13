@@ -14,6 +14,7 @@
 #include "dm_import.h"
 #include "iot_export_dm.h"
 #include "dm_slist.h"
+#include "event_type_code.h"
 
 #define DM_CM_MSG_INFO_EXTENTED_ROOM_FOR_STRING_MALLOC 1
 
@@ -411,6 +412,22 @@ static void dm_cm_msg_info_set_params_data(void *_self, char *params_data_buf)
     dm_cm_msg_info_t *self = _self;
 
     assert(params_data_buf);
+
+    printf("\r\n[%d]:[%s]\r\n",__LINE__,__func__);
+    printf("params_data_buf:[%s]\r\n",params_data_buf);
+    if (0 == memcmp("{\"PowerSwitch",params_data_buf,strlen("{\"PowerSwitch"))) {
+        printf("\r\n[%d]:[%s]\r\n",__LINE__,__func__);
+        char value   = 0;
+        char channal = 0;
+        char *pstr   = NULL;
+        pstr = strchr(params_data_buf,'_');
+        if (pstr) {
+            channal = *(pstr+1) - '0';
+        }
+        pstr = strchr(params_data_buf,':');
+        value = *(pstr+1) - '0';
+        aos_post_event(EV_RYL, channal, value);
+    }
 
     if (self->params_data_buf) {
         dm_lite_free(self->params_data_buf);

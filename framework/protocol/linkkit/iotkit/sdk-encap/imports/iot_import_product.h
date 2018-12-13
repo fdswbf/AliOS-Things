@@ -20,10 +20,10 @@
 
 
 #if 1
-#define PRODUCT_KEY             "b1iuHMGJYGI"
-#define PRODUCT_SECRET          "Na027DnOTFtkLfEz"
-#define DEVICE_NAME             "oooooooooooooooooooooooooooooooo"
-#define DEVICE_SECRET           "ri2CWiX0HYlBGQXaF4LjWozf6YAsebOE"
+#define PRODUCT_KEY             "a1qXi2sExXZ"
+#define PRODUCT_SECRET          "K6eqNW9rNDk2FFhd"//kO4TV83FknaBh7nJ   //LW6HXkSlYM6SPsmV
+#define DEVICE_NAME             "SEL2SE5upsmbCCZJyjeA"
+#define DEVICE_SECRET           "0hgq1V61Vs7CK4sT0tR8WEclpV8Mvmrc"
 #elif 0
 #define PRODUCT_KEY             "b1iuHMGJYGI"
 #define PRODUCT_SECRET          "Na027DnOTFtkLfEz"

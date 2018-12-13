@@ -150,3 +150,7 @@
 #define CODE_BLE_TX_COMPLETED       1
 #endif /* AOS_EVENT_TYPE_CODE_API_H */
 
+/** RYL */
+#define EV_RYL                          0x020F
+#define CODE_RYL_SET                    1
+#define CODE_RYL_GET                    2
