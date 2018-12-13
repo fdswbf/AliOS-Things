@@ -19,6 +19,7 @@
 #include "iot_import.h"
 
 #include "linkkit_app.h"
+#include "sv6266_user.h"
 
 #define POST_WIFI_STATUS
 /*
@@ -403,6 +404,62 @@ static int post_property_wifi_status_once(sample_context_t *sample_ctx)
     return ret;
 }
 #endif
+
+dev_status_e userDevStatus;
+void user_wifi_status(void)
+{
+    static unsigned char ledStatus = 0; 
+    static unsigned long long now  = 0;
+    now += 1;
+
+    switch(userDevStatus)
+    {
+        case DEV_WAIT_CONFIG:
+            //every 200ms blink led
+            if (ledStatus) {
+                ledStatus = 0;
+                set_ryl_output(LED_WIFI_STATUS,0);
+            } else if (!ledStatus) {
+                ledStatus = 1;
+                set_ryl_output(LED_WIFI_STATUS,1);
+            }
+        break;
+
+        
+
+        case DEV_CONNECTED_SERVER:
+            ledStatus = 0;
+            set_ryl_output(LED_WIFI_STATUS,0);
+        break;
+
+        case DEV_CONNECTED_AP:
+        case DEV_DISCONNECT_SERVER:
+            //every 1s blink led
+            if ((now % 5) == 0) {
+                if (ledStatus) {
+                    ledStatus = 0;
+                    set_ryl_output(LED_WIFI_STATUS,0);
+                } else if (!ledStatus) {
+                    ledStatus = 1;
+                    set_ryl_output(LED_WIFI_STATUS,1);
+                }
+            }
+        break;
+
+        case DEV_DISCONNECT_AP:
+        case DEV_DEFAULT_STATUS:
+            ledStatus = 1;
+            set_ryl_output(LED_WIFI_STATUS,1);
+        break;
+
+        default:
+        break;
+    }
+    if ((now % 10) == 0) {
+        //LINKKIT_PRINTF("====================%d====================\n",userDevStatus);
+    }
+    aos_post_delayed_action(100, user_wifi_status, NULL);
+}
 
 void linkkit_action(void *params)
 {

@@ -37,6 +37,7 @@
 #ifdef CSP_LINUXHOST
 #include <signal.h>
 #endif
+#include "sv6266_user.h"
 
 static char linkkit_started = 0;
 static char awss_running = 0;
@@ -99,14 +100,17 @@ static void cloud_service_event(input_event_t *event, void *priv_data)
  */
 static void linkkit_event_monitor(int event)
 {
+    printf("\n[%d]:%s:%d\n",__LINE__,__func__,event);
     switch (event) {
     case IOTX_AWSS_START:                // AWSS start without enbale, just supports device discover
         // operate led to indicate user
         LOG("IOTX_AWSS_START");
+        userDevStatus = DEV_DEFAULT_STATUS;
         break;
     case IOTX_AWSS_ENABLE:               // AWSS enable
         LOG("IOTX_AWSS_ENABLE");
         // operate led to indicate user
+        userDevStatus = DEV_WAIT_CONFIG;
         break;
     case IOTX_AWSS_LOCK_CHAN:            // AWSS lock channel(Got AWSS sync packet)
         LOG("IOTX_AWSS_LOCK_CHAN");
@@ -163,6 +167,7 @@ static void linkkit_event_monitor(int event)
     case IOTX_CONN_CLOUD:                // Device try to connect cloud
         LOG("IOTX_CONN_CLOUD");
         // operate led to indicate user
+        userDevStatus = DEV_CONNECTED_AP;
         break;
     case IOTX_CONN_CLOUD_FAIL:           // Device fails to connect cloud, refer to net_sockets.h for error code
         LOG("IOTX_CONN_CLOUD_FAIL");
@@ -171,6 +176,7 @@ static void linkkit_event_monitor(int event)
     case IOTX_CONN_CLOUD_SUC:            // Device connects cloud successfully
         LOG("IOTX_CONN_CLOUD_SUC");
         // operate led to indicate user
+        userDevStatus = DEV_CONNECTED_SERVER;
         break;
     case IOTX_RESET:                     // Linkkit reset success (just got reset response from cloud without any other operation)
         LOG("IOTX_RESET");
@@ -183,6 +189,7 @@ static void linkkit_event_monitor(int event)
 
 static void start_netmgr(void *p)
 {
+    printf("\n[%d]:%s\n",__LINE__,__func__);
     iotx_event_regist_cb(linkkit_event_monitor);
     netmgr_start(true);
     aos_task_exit(0);
@@ -230,15 +237,15 @@ void ryl_service_event(input_event_t *eventinfo, void *priv_data)
     if (eventinfo->type != EV_RYL) {
         return;
     }
-    LOG("\n\nryl service event code:%d,value:%d\n", eventinfo->code,eventinfo->value);
+    LOG("\nryl service event code:%d,value:%d\n", eventinfo->code,eventinfo->value);
 
     if (eventinfo->code == 0) {
-        set_ryl_output(8,eventinfo->value);
+        set_ryl_output(LED_RYL1,eventinfo->value);
     } else if (eventinfo->code == 1) {
-        set_ryl_output(20,eventinfo->value);
+        set_ryl_output(LED_RYL2,eventinfo->value);
     } else if (eventinfo->code == 2) {
-        set_ryl_output(2,eventinfo->value);
-    }
+        set_ryl_output(LED_RYL3,eventinfo->value);
+    } 
 }
 
 #ifdef CONFIG_AOS_CLI
@@ -284,6 +291,7 @@ int application_start(int argc, char **argv)
 
     netmgr_init();
     //do_awss_active();
+    user_wifi_status();
     aos_register_event_filter(EV_KEY, linkkit_key_process, NULL);
     aos_register_event_filter(EV_WIFI, wifi_service_event, NULL);
     aos_register_event_filter(EV_YUNIO, cloud_service_event, NULL);
@@ -294,7 +302,6 @@ int application_start(int argc, char **argv)
     aos_cli_register_command(&ncmd);
 #endif
     aos_task_new("netmgr", start_netmgr, NULL, 4096);
-
     aos_loop_run();
 
     return 0;

@@ -3,16 +3,10 @@
 #include "soc_defs.h"
 #include <stdio.h>
 #include <aos/aos.h>
+#include "sv6266_user.h"
 
 /* Logic partition on flash devices */
 hal_logic_partition_t hal_partitions[HAL_PARTITION_MAX];
-
-
-#define KEY_WIFI_CONFIG     12
-#define LED_WIFI_STATUS     10
-#define LED_RYL1            8
-#define LED_RYL2            20
-#define LED_RYL3            2
 
 static gpio_dev_t gpio_key_wifi_config;
 static gpio_dev_t gpio_output_config;
@@ -45,8 +39,8 @@ static void key_poll_func(void *arg)
 
 void set_ryl_output(int gpioNum,int value)
 {
-    printf("\r\n[%d]:[%s]\r\n",__LINE__,__func__);
-    printf("\ngpio:%d  value:%d\n",gpioNum,value);
+    //printf("\r\n[%d]:[%s]\r\n",__LINE__,__func__);
+    //printf("\ngpio:%d  value:%d\n",gpioNum,value);
     gpio_output_config.port = gpioNum;
 
     if (value == 1) {
