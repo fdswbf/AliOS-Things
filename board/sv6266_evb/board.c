@@ -16,29 +16,25 @@ void key_pull_func(void *arg)
 { 
     static uint32_t level;
     static uint64_t timer;
-
+    static uint32_t times;
     hal_gpio_input_get(&gpio_key_wifi_config, &level);
     
-    if(level == 0) 
-    {
+    if (level == 0) {
         timer++;
-        if(timer >= 20)
-        {
-            aos_post_event(EV_KEY, CODE_BOOT, VALUE_KEY_LTCLICK);
+        if (timer >= 20) {   
+            if (times == 0) {
+              aos_post_event(EV_KEY, CODE_BOOT, VALUE_KEY_LTCLICK);   
+            } 
+            times++;
         }
-
-    }
-    else
-    {
-        if((timer >= 1) && (timer <= 20))
-        {
+    } else {
+        if((timer >= 1) && (timer <= 20)) {
             aos_post_event(EV_KEY, CODE_BOOT, VALUE_KEY_CLICK);
         }
         timer = 0; 
+        times = 0;
     }
-    
-     aos_post_delayed_action(100, key_pull_func, NULL);
-   
+    aos_post_delayed_action(100, key_pull_func, NULL);
 }
 
 
