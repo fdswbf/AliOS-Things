@@ -1,8 +1,8 @@
 #ifndef __SV6266_USER_H__
 #define __SV6266_USER_H__
 
-#define KEY_WIFI_CONFIG     12
-#define LED_WIFI_STATUS     10
+#define KEY_WIFI_CONFIG     0//12
+#define LED_WIFI_STATUS     13//10
 #define LED_RYL1            8
 #define LED_RYL2            20
 #define LED_RYL3            2
@@ -17,5 +17,6 @@ typedef enum{
 }dev_status_e;         
 
 extern dev_status_e userDevStatus;
-
+extern void key_pull_func(void *arg);
+extern void set_ryl_output(int gpioNum,int value);
 #endif

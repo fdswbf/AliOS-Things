@@ -406,11 +406,12 @@ static int post_property_wifi_status_once(sample_context_t *sample_ctx)
 #endif
 
 dev_status_e userDevStatus;
-void user_wifi_status(void)
+void user_wifi_status(void *arg)
 {
     static unsigned char ledStatus = 0; 
     static unsigned long long now  = 0;
     now += 1;
+    static unsigned char pre_status;
 
     switch(userDevStatus)
     {
@@ -428,8 +429,8 @@ void user_wifi_status(void)
         
 
         case DEV_CONNECTED_SERVER:
-            ledStatus = 0;
-            set_ryl_output(LED_WIFI_STATUS,0);
+            ledStatus = 1;
+            set_ryl_output(LED_WIFI_STATUS,1);
         break;
 
         case DEV_CONNECTED_AP:
@@ -456,10 +457,11 @@ void user_wifi_status(void)
         break;
     }
     if ((now % 10) == 0) {
-        //LINKKIT_PRINTF("====================%d====================\n",userDevStatus);
+        LINKKIT_PRINTF("====================%d====================\n",userDevStatus);
     }
     aos_post_delayed_action(100, user_wifi_status, NULL);
 }
+
 
 void linkkit_action(void *params)
 {

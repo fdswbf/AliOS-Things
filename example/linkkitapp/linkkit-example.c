@@ -85,10 +85,12 @@ static void cloud_service_event(input_event_t *event, void *priv_data)
 
     if (event->code == CODE_YUNIO_ON_CONNECTED) {
         LOG("user sub and pub here");
+        userDevStatus = DEV_CONNECTED_SERVER;
         return;
     }
 
     if (event->code == CODE_YUNIO_ON_DISCONNECTED) {
+        userDevStatus = DEV_CONNECTED_AP;
     }
 }
 
@@ -110,6 +112,7 @@ static void linkkit_event_monitor(int event)
     case IOTX_AWSS_ENABLE:               // AWSS enable
         LOG("IOTX_AWSS_ENABLE");
         // operate led to indicate user
+        if((userDevStatus == DEV_CONNECTED_AP)||(userDevStatus == DEV_CONNECTED_SERVER)) break;
         userDevStatus = DEV_WAIT_CONFIG;
         break;
     case IOTX_AWSS_LOCK_CHAN:            // AWSS lock channel(Got AWSS sync packet)
@@ -291,7 +294,8 @@ int application_start(int argc, char **argv)
 
     netmgr_init();
     //do_awss_active();
-    user_wifi_status();
+    user_wifi_status(NULL);
+    key_pull_func(NULL);
     aos_register_event_filter(EV_KEY, linkkit_key_process, NULL);
     aos_register_event_filter(EV_WIFI, wifi_service_event, NULL);
     aos_register_event_filter(EV_YUNIO, cloud_service_event, NULL);

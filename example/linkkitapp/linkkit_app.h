@@ -2,6 +2,6 @@
 #define __LINKKITAPP_H__
 
 int linkkit_app(void);
-void user_wifi_status(void);
+void user_wifi_status(void *arg);
 
 #endif
