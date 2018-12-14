@@ -90,7 +90,7 @@ static void cloud_service_event(input_event_t *event, void *priv_data)
     }
 
     if (event->code == CODE_YUNIO_ON_DISCONNECTED) {
-        userDevStatus = DEV_CONNECTED_AP;
+        //userDevStatus = DEV_CONNECTED_AP;
     }
 }
 
@@ -170,7 +170,7 @@ static void linkkit_event_monitor(int event)
     case IOTX_CONN_CLOUD:                // Device try to connect cloud
         LOG("IOTX_CONN_CLOUD");
         // operate led to indicate user
-        userDevStatus = DEV_CONNECTED_AP;
+        //userDevStatus = DEV_CONNECTED_AP;
         break;
     case IOTX_CONN_CLOUD_FAIL:           // Device fails to connect cloud, refer to net_sockets.h for error code
         LOG("IOTX_CONN_CLOUD_FAIL");
@@ -179,7 +179,7 @@ static void linkkit_event_monitor(int event)
     case IOTX_CONN_CLOUD_SUC:            // Device connects cloud successfully
         LOG("IOTX_CONN_CLOUD_SUC");
         // operate led to indicate user
-        userDevStatus = DEV_CONNECTED_SERVER;
+        //userDevStatus = DEV_CONNECTED_SERVER;
         break;
     case IOTX_RESET:                     // Linkkit reset success (just got reset response from cloud without any other operation)
         LOG("IOTX_RESET");

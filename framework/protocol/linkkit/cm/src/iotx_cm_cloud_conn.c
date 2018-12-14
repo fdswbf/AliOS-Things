@@ -27,7 +27,7 @@
 #include "iotx_cm_connection.h"
 #include "iotx_cm_cloud_conn.h"
 #include "iotx_cloud_conn_mqtt.h"
-
+#include "sv6266_user.h"
 static iotx_cm_send_peer_t g_cloud_target;
 
 static void iotx_cm_cloud_conn_event_callback(void *_cm_ctx, iotx_connection_event_msg_t *msg)
@@ -38,7 +38,7 @@ static void iotx_cm_cloud_conn_event_callback(void *_cm_ctx, iotx_connection_eve
         CM_ERR(cm_log_error_parameter);
         return;
     }
-
+//printf("\n==========1==1==1==1=1=1=1=1=1=1=1=1=1=1=1=1=1=1========\n");
     CM_INFO(cm_log_info_event_id, msg->event_id);
 
     switch (msg->event_id) {
@@ -71,6 +71,7 @@ static void iotx_cm_cloud_conn_event_callback(void *_cm_ctx, iotx_connection_eve
         break;
 
         case IOTX_CONNECTION_EVENT_RECONNECT: {
+            //userDevStatus = DEV_CONNECTED_SERVER;
 #ifdef CM_SUPPORT_MULTI_THREAD
             {
                 /* send message to itself thread */
@@ -432,28 +433,28 @@ static int iotx_cm_cloud_conn_response_callback(void *_cm_ctx, iotx_connection_m
 int iotx_cm_cloud_conn_disconnect_handler(iotx_cm_conntext_t *cm_ctx)
 {
     iotx_cm_event_msg_t event;
-
+    printf("====3=3==3=3=3=3=3=3=3=3=3=3=3=3==3=3=3=3=3=3=\n");
     event.event_id = IOTX_CM_EVENT_CLOUD_DISCONNECT;
     event.msg = NULL;
 
     CM_INFO(cm_log_info_cloud_disconnect);
 
     iotx_cm_trigger_event_callback(cm_ctx, &event);
-
+    userDevStatus = DEV_DISCONNECT_SERVER;
     return SUCCESS_RETURN;
 }
 
 int iotx_cm_cloud_conn_reconnect_handler(iotx_cm_conntext_t *cm_ctx)
 {
     iotx_cm_event_msg_t event;
-
+    printf("====2=2=2=2=2=2=2==2=2=2=2=2=2=2=22=\n");
     event.event_id = IOTX_CM_EVENT_CLOUD_RECONNECT;
     event.msg = NULL;
 
     CM_INFO(cm_log_info_cloud_reconnect);
-
+    
     iotx_cm_trigger_event_callback(cm_ctx, &event);
-
+    userDevStatus = DEV_CONNECTED_AP;
     return SUCCESS_RETURN;
 }
 
@@ -461,7 +462,7 @@ int iotx_cm_cloud_conn_register_handler(iotx_cm_conntext_t *cm_ctx, char *URI, i
 {
     iotx_cm_event_msg_t event;
     iotx_cm_event_result_t event_result = {0};
-
+   // printf("====3=3==3=3=3=3=3=3=3=3=3=3=3=3==3=3=3=3=3=3=\n");
     if (NULL == cm_ctx || NULL == URI) {
         CM_ERR(cm_log_error_parameter);
         return FAIL_RETURN;
@@ -497,7 +498,7 @@ int iotx_cm_cloud_conn_response_handler(iotx_cm_conntext_t *cm_ctx, iotx_cm_mess
         CM_ERR(cm_log_error_parameter);
         return FAIL_RETURN;
     }
-
+    //userDevStatus = DEV_CONNECTED_SERVER;
     CM_INFO(cm_log_info_URI, (char *)message_info->URI);
 
     if (cm_ctx->response_func) {
@@ -512,14 +513,14 @@ int iotx_cm_cloud_conn_connect(void *handler, void *_connectivity)
 {
     iotx_cm_connectivity_t *connectivity = NULL;
     iotx_connection_t *connection = NULL;
-
+   
     connectivity = (iotx_cm_connectivity_t *)_connectivity;
     connection = (iotx_connection_t *)connectivity->context;
 
     connection->context = connection->init_func(connection);
     if (connection->context) {
         connectivity->is_connected = 1;
-
+        //userDevStatus = DEV_CONNECTED_SERVER;
         return SUCCESS_RETURN;
     }
 

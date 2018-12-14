@@ -38,6 +38,7 @@
 #endif
 #endif
 
+#include "sv6266_user.h"
 
 static int iotx_mc_send_packet(iotx_mc_client_t *c, char *buf, int length,
                                iotx_time_t *timer);
@@ -2000,7 +2001,7 @@ static void iotx_mc_keepalive(iotx_mc_client_t *pClient)
 #endif
             log_err("network is disconnected!");
             iotx_mc_disconnect_callback(pClient);
-
+            userDevStatus = DEV_CONNECTED_AP;
             pClient->reconnect_param.reconnect_time_interval_ms =
               IOTX_MC_RECONNECT_INTERVAL_MIN_MS;
             utils_time_countdown_ms(
