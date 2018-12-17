@@ -7,6 +7,8 @@
 #define LED_RYL2            20
 #define LED_RYL3            2
 
+#define TEST_LED            11
+
 typedef enum{
     DEV_WAIT_CONFIG         = 1,
     DEV_CONNECTED_AP        = 2,
