@@ -63,10 +63,11 @@ void key_pull_func(void *arg)
         }
     } else {
         if ((timer >= 1) && (timer <= 50)) {
-           set_ryl_toggle(LED_RYL1);
-           set_ryl_toggle(LED_RYL2);
-           set_ryl_toggle(LED_RYL3);
-           //set_ryl_toggle(TEST_LED);
+            aos_post_event(EV_KEY, CODE_BOOT, VALUE_KEY_CLICK); 
+            //set_ryl_toggle(LED_RYL1);
+            //set_ryl_toggle(LED_RYL2);
+            //set_ryl_toggle(LED_RYL3);
+            //set_ryl_toggle(TEST_LED);
         }
         times = 0;
         timer = 0; 
