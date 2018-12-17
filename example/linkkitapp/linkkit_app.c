@@ -37,6 +37,10 @@
 #define EVENT_ERROR_IDENTIFIER                 "Error"
 #define EVENT_ERROR_OUTPUT_INFO_IDENTIFIER     "ErrorCode"
 #define EVENT_CUSTOM_IDENTIFIER                "Custom"
+#define EVENT_POST_IDENTIFIER                  "post"
+#define EVENT_OUTPUTDATA_IDENTIFIER_SW0        "PowerSwitch"
+#define EVENT_OUTPUTDATA_IDENTIFIER_SW1        "PowerSwitch_1"
+#define EVENT_OUTPUTDATA_IDENTIFIER_SW2        "PowerSwitch_2"
 
 /* specify ota buffer size for ota service, ota service will use this buffer for bin download. */
 static void ota_init();
@@ -79,6 +83,10 @@ void post_property_cb(const void *thing_id, int respons_id, int code, const char
 
     return linkkit_trigger_event(sample_ctx->thing, EVENT_ERROR_IDENTIFIER, post_property_cb);
 #endif
+    printf("\n------------------------------------\n");
+    printf("thing@%p: response arrived:\nid:%d\tcode:%d\tmessage:%s\n", thing_id, respons_id, code,
+                   response_message == NULL ? "NULL" : response_message);
+    printf("\n------------------------------------\n");
     LINKKIT_PRINTF("thing@%p: response arrived:\nid:%d\tcode:%d\tmessage:%s\n", thing_id, respons_id, code,
                    response_message == NULL ? "NULL" : response_message);
 }
@@ -331,6 +339,28 @@ static unsigned long long uptime_sec(void)
 }
 #endif
 
+int post_event_switch(sample_context_t *sample,char* switchChannel,int value)
+{
+    //char event_output_identifier[64];
+
+    //snprintf(event_output_identifier, sizeof(event_output_identifier), "%s.%s", \
+    EVENT_POST_IDENTIFIER,switchChannel);
+
+
+
+    value += '0';
+
+    int ret = linkkit_set_value(linkkit_method_set_property_value,
+                      sample->thing,
+                      switchChannel,
+                      NULL, &value);  
+    printf("\n------------------------------------\n");
+    printf("%s value:%d ret:%d",switchChannel,value,ret);
+    printf("\n------------------------------------\n");
+    return linkkit_post_property(sample->thing,switchChannel,post_property_cb);
+    //return linkkit_trigger_event(sample->thing, EVENT_POST_IDENTIFIER, post_property_cb);
+}
+
 static int post_event_error(sample_context_t *sample)
 {
     char event_output_identifier[64];
@@ -462,7 +492,7 @@ void user_wifi_status(void *arg)
     aos_post_delayed_action(100, user_wifi_status, NULL);
 }
 
-
+int switchStatusChange = 0;
 void linkkit_action(void *params)
 {
     static unsigned long long now = 0;
@@ -492,6 +522,56 @@ void linkkit_action(void *params)
             id_send = ret;
             LINKKIT_PRINTF("send id:%d\n", id_send);
         }
+    }
+    if (is_active(sample_ctx)) {
+        static int ret0  = 0;
+        static int ret1  = 0;
+        static int ret2  = 0;
+        static int value = 0;
+
+        if (switchStatusChange == 1) {
+            if ((switchParm[0].value == switchParm[1].value) && \
+            (switchParm[2].value == switchParm[1].value) && \
+            ((ret0 == 0) && (ret1 == 0) && (ret2 == 0))) {
+                if (switchParm[2].value) value = 0;
+                else value = 1;
+            } else if ((ret0 == 0) && (ret1 == 0) && (ret2 == 0)) {
+                value = 0;
+            }
+
+            if (!ret0) {
+                ret0 = post_event_switch(sample_ctx,EVENT_OUTPUTDATA_IDENTIFIER_SW0,value);
+                set_ryl_output(LED_RYL1,value);
+                //switchParm[0].value = value;
+            } else if (!ret1) {
+                ret1 = post_event_switch(sample_ctx,EVENT_OUTPUTDATA_IDENTIFIER_SW1,value);
+                set_ryl_output(LED_RYL2,value);
+                //switchParm[1].value = value;
+            } else if (!ret2) {
+                ret2 = post_event_switch(sample_ctx,EVENT_OUTPUTDATA_IDENTIFIER_SW2,value);
+                set_ryl_output(LED_RYL3,value);
+                //switchParm[2].value = value;
+            }
+        }
+
+        if (ret0 && ret1 && ret2) {
+            switchStatusChange = 0;
+            ret0 = 0;
+            ret1 = 0;
+            ret2 = 0;
+        }
+        #if 0
+        if (upStreamData == 1) {
+            upStreamData = 0;
+            post_event_switch(sample_ctx,EVENT_OUTPUTDATA_IDENTIFIER_SW0,switchParm[0].value);
+        } else if (upStreamData == 2) {
+            upStreamData = 0;
+            post_event_switch(sample_ctx,EVENT_OUTPUTDATA_IDENTIFIER_SW1,switchParm[1].value);
+        } else if (upStreamData == 3) {
+            upStreamData = 0;
+            post_event_switch(sample_ctx,EVENT_OUTPUTDATA_IDENTIFIER_SW2,switchParm[2].value);
+        } 
+        #endif
     }
 #endif
 
@@ -587,6 +667,8 @@ int linkkit_main()
     sample_ctx->thing_enabled = 1;
 
     linkkit_start(16, get_tsl_from_cloud, linkkit_loglevel_debug, &alink_ops, linkkit_cloud_domain_shanghai, sample_ctx);
+
+    memset(switchParm,0,(sizeof(switchParm_t))*RYL_CHANNAL_MAX);
 
     aos_post_delayed_action(5000, linkkit_set_tsl_action, NULL);
     aos_post_delayed_action(6000, linkkit_action, sample_ctx);

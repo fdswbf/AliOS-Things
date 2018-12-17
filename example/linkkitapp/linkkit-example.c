@@ -90,7 +90,7 @@ static void cloud_service_event(input_event_t *event, void *priv_data)
     }
 
     if (event->code == CODE_YUNIO_ON_DISCONNECTED) {
-        //userDevStatus = DEV_CONNECTED_AP;
+        userDevStatus = DEV_CONNECTED_AP;
     }
 }
 
@@ -170,7 +170,7 @@ static void linkkit_event_monitor(int event)
     case IOTX_CONN_CLOUD:                // Device try to connect cloud
         LOG("IOTX_CONN_CLOUD");
         // operate led to indicate user
-        //userDevStatus = DEV_CONNECTED_AP;
+        userDevStatus = DEV_CONNECTED_AP;
         break;
     case IOTX_CONN_CLOUD_FAIL:           // Device fails to connect cloud, refer to net_sockets.h for error code
         LOG("IOTX_CONN_CLOUD_FAIL");
@@ -179,7 +179,7 @@ static void linkkit_event_monitor(int event)
     case IOTX_CONN_CLOUD_SUC:            // Device connects cloud successfully
         LOG("IOTX_CONN_CLOUD_SUC");
         // operate led to indicate user
-        //userDevStatus = DEV_CONNECTED_SERVER;
+        userDevStatus = DEV_CONNECTED_SERVER;
         break;
     case IOTX_RESET:                     // Linkkit reset success (just got reset response from cloud without any other operation)
         LOG("IOTX_RESET");
@@ -228,13 +228,15 @@ void linkkit_key_process(input_event_t *eventinfo, void *priv_data)
 
     if (eventinfo->code == CODE_BOOT) {
         if (eventinfo->value == VALUE_KEY_CLICK) {
-            do_awss_active();
+            switchStatusChange = 1;
+            //do_awss_active();
         } else if (eventinfo->value == VALUE_KEY_LTCLICK) {
             do_awss_reset();
         }
     }
 }
 
+int upStreamData = 0;
 void ryl_service_event(input_event_t *eventinfo, void *priv_data)
 {
     if (eventinfo->type != EV_RYL) {
@@ -243,10 +245,13 @@ void ryl_service_event(input_event_t *eventinfo, void *priv_data)
     LOG("\nryl service event code:%d,value:%d\n", eventinfo->code,eventinfo->value);
 
     if (eventinfo->code == 0) {
+        upStreamData = 1;
         set_ryl_output(LED_RYL1,eventinfo->value);
     } else if (eventinfo->code == 1) {
+        upStreamData = 2;
         set_ryl_output(LED_RYL2,eventinfo->value);
     } else if (eventinfo->code == 2) {
+        upStreamData = 3;
         set_ryl_output(LED_RYL3,eventinfo->value);
     } 
 }
@@ -293,7 +298,6 @@ int application_start(int argc, char **argv)
     aos_set_log_level(AOS_LL_DEBUG);
 
     netmgr_init();
-    //do_awss_active();
     user_wifi_status(NULL);
     key_pull_func(NULL);
     aos_register_event_filter(EV_KEY, linkkit_key_process, NULL);

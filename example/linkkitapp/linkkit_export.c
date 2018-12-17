@@ -541,6 +541,7 @@ int linkkit_set_value(linkkit_method_set_t method_set, const void* thing_id, con
 
     if (dm == NULL || *dm == NULL || thing_id == NULL || identifier == NULL || method_set >= linkkit_method_set_number || (value == NULL && value_str == NULL)) return -1;
 
+    printf("-----------------linkkit set value------------\r\n");
     if (method_set == linkkit_method_set_property_value) {
         ret = (*dm)->set_property_value(dm, thing_id, identifier, value, value_str);
     } else if (method_set == linkkit_method_set_event_output_value) {

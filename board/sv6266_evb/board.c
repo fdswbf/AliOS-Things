@@ -38,7 +38,6 @@ void key_pull_func(void *arg)
 }
 
 
-
 void set_ryl_output(int gpioNum,int value)
 {
     //printf("\r\n[%d]:[%s]\r\n",__LINE__,__func__);
