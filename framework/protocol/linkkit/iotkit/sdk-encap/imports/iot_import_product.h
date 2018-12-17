@@ -30,6 +30,7 @@
 #define DEVICE_NAME             "socket"
 #define DEVICE_SECRET           "WsEXvrnQo0YnZfuul5lQtdqgbvUhrYDQ"
 
+
 #elif 0
 #define PRODUCT_KEY             "b1iuHMGJYGI"
 #define PRODUCT_SECRET          "Na027DnOTFtkLfEz"
