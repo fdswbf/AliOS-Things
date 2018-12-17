@@ -8,6 +8,8 @@
 #define LED_RYL3            2
 #define RYL_CHANNAL_MAX     3
 
+#define TEST_LED            11
+
 typedef enum{
     DEV_WAIT_CONFIG         = 1,
     DEV_CONNECTED_AP        = 2,

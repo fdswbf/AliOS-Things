@@ -4,7 +4,9 @@
 #include <stdio.h>
 #include <aos/aos.h>
 #include "sv6266_user.h"
+#include <string.h>
 
+#define LED_PARTITION 6
 /* Logic partition on flash devices */
 hal_logic_partition_t hal_partitions[HAL_PARTITION_MAX];
 
@@ -12,28 +14,64 @@ static gpio_dev_t gpio_key_wifi_config;
 static gpio_dev_t gpio_output_config;
 
 
+void set_ryl_toggle(int gpioNum)
+{
+    gpio_output_config.port = gpioNum;
+    hal_gpio_output_toggle(&gpio_output_config);
+}
+
+void sv6266_flash_write(char *inbuf,char len)
+{
+    int blk_size;
+    uint32_t offset = 12288;
+    char buf[10] = {0};
+   
+    blk_size = len;
+    memcpy(buf, inbuf, len);
+    //offset = 3*blk_size;
+    printf("buf[0]------- = %d\n",buf[0]);
+    hal_flash_erase(LED_PARTITION, offset, blk_size);
+    hal_flash_write(LED_PARTITION, &offset, buf, blk_size);
+}
+
+void sv6266_flash_read(char *outbuf)
+{
+    uint32_t offset = 12288;
+    char buf[10] = {0};
+    hal_flash_read(LED_PARTITION, &offset, buf, 1);
+    printf("buf[0] = %d\n",buf[0]);
+    memcpy(outbuf, buf, 1);
+    printf("outbuf = %d\r\n",outbuf[0]);
+
+}
+
 void key_pull_func(void *arg)
 { 
     static uint32_t level;
     static uint64_t timer;
     static uint32_t times;
+
     hal_gpio_input_get(&gpio_key_wifi_config, &level);
-    
     if (level == 0) {
         timer++;
         if (timer >= 20) {   
             if (times == 0) {
-              aos_post_event(EV_KEY, CODE_BOOT, VALUE_KEY_LTCLICK);   
-            } 
+                aos_post_event(EV_KEY, CODE_BOOT, VALUE_KEY_LTCLICK); 
+               
+            }
             times++;
         }
     } else {
-        if((timer >= 1) && (timer <= 20)) {
-            aos_post_event(EV_KEY, CODE_BOOT, VALUE_KEY_CLICK);
+        if ((timer >= 1) && (timer <= 50)) {
+           set_ryl_toggle(LED_RYL1);
+           set_ryl_toggle(LED_RYL2);
+           set_ryl_toggle(LED_RYL3);
+           //set_ryl_toggle(TEST_LED);
         }
-        timer = 0; 
         times = 0;
+        timer = 0; 
     }
+    
     aos_post_delayed_action(100, key_pull_func, NULL);
 }
 
@@ -78,6 +116,12 @@ static void sv6266_board_init(void)
 	gpio_output_config.config = OUTPUT_OPEN_DRAIN_PULL_UP;
 	hal_gpio_init(&gpio_output_config);
     hal_gpio_output_low(&gpio_output_config);
+
+    /*gpio_output_config.port = TEST_LED;
+	gpio_output_config.config = OUTPUT_OPEN_DRAIN_PULL_UP;
+	hal_gpio_init(&gpio_output_config);
+    hal_gpio_output_low(&gpio_output_config);*/
+
 }
 
 

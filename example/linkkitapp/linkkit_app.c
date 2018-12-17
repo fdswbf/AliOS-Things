@@ -20,6 +20,8 @@
 
 #include "linkkit_app.h"
 #include "sv6266_user.h"
+#include "netmgr.h"
+
 
 #define POST_WIFI_STATUS
 /*
@@ -442,7 +444,19 @@ void user_wifi_status(void *arg)
     static unsigned long long now  = 0;
     now += 1;
     static unsigned char pre_status;
+    if(now == 15)
+    {
+        netmgr_ap_config_t config;
+        memset(&config, 0, sizeof(netmgr_ap_config_t));
+        netmgr_get_ap_config(&config);
+        LOG("wifi_service_event config.ssid %s", config.ssid); 
+        if(strlen(config.ssid) == 0)
+        {
+             extern void do_awss_active();
+             do_awss_active();
+        }
 
+    }
     switch(userDevStatus)
     {
         case DEV_WAIT_CONFIG:

@@ -50,6 +50,7 @@ static void wifi_service_event(input_event_t *event, void *priv_data)
     }
 
     if (event->code != CODE_WIFI_ON_GOT_IP) {
+        
         return;
     }
 
@@ -112,7 +113,7 @@ static void linkkit_event_monitor(int event)
     case IOTX_AWSS_ENABLE:               // AWSS enable
         LOG("IOTX_AWSS_ENABLE");
         // operate led to indicate user
-        if((userDevStatus == DEV_CONNECTED_AP)||(userDevStatus == DEV_CONNECTED_SERVER)) break;
+        //if((userDevStatus == DEV_CONNECTED_AP)||(userDevStatus == DEV_CONNECTED_SERVER)) break;
         userDevStatus = DEV_WAIT_CONFIG;
         break;
     case IOTX_AWSS_LOCK_CHAN:            // AWSS lock channel(Got AWSS sync packet)
@@ -256,6 +257,7 @@ void ryl_service_event(input_event_t *eventinfo, void *priv_data)
     } 
 }
 
+
 #ifdef CONFIG_AOS_CLI
 static void handle_reset_cmd(char *pwbuf, int blen, int argc, char **argv)
 {
@@ -304,7 +306,6 @@ int application_start(int argc, char **argv)
     aos_register_event_filter(EV_WIFI, wifi_service_event, NULL);
     aos_register_event_filter(EV_YUNIO, cloud_service_event, NULL);
     aos_register_event_filter(EV_RYL, ryl_service_event, NULL);
-
 #ifdef CONFIG_AOS_CLI
     aos_cli_register_command(&resetcmd);
     aos_cli_register_command(&ncmd);

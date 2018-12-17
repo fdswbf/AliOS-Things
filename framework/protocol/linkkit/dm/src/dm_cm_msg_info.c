@@ -416,7 +416,7 @@ static void dm_cm_msg_info_set_params_data(void *_self, char *params_data_buf)
     assert(params_data_buf);
 
     printf("\r\n[%d]:[%s]\r\n",__LINE__,__func__);
-    //printf("params_data_buf:[%s]\r\n",params_data_buf);
+    printf("params_data_buf:[%s]\r\n",params_data_buf);
     if (0 == memcmp("{\"PowerSwitch",params_data_buf,strlen("{\"PowerSwitch"))) {
         
         char value   = 0;
@@ -428,6 +428,7 @@ static void dm_cm_msg_info_set_params_data(void *_self, char *params_data_buf)
             switchParm[channal].channel = channal;
         }
         pstr = strchr(params_data_buf,':');
+
         value = *(pstr+1) - '0';
         switchParm[channal].value = value;
         aos_post_event(EV_RYL, channal, value);

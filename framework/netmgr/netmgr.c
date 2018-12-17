@@ -633,6 +633,7 @@ int netmgr_start(bool autoconfig)
         aos_post_event(EV_WIFI, CODE_WIFI_CMD_RECONNECT, 0);
         return 0;
     }
+    
 #ifdef CONFIG_AOS_NETMGRYTS_NOSMARTCONFIG
     else {
         LOGI("netmgr", "netmgr yts only supports valid AP connect test, "

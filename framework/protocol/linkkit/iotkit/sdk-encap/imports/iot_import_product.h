@@ -20,14 +20,17 @@
 
 
 #if 1
-#define PRODUCT_KEY             "a1qXi2sExXZ"
-#define PRODUCT_SECRET          "K6eqNW9rNDk2FFhd"//kO4TV83FknaBh7nJ   //LW6HXkSlYM6SPsmV
-#define DEVICE_NAME             "SEL2SE5upsmbCCZJyjeA"
-#define DEVICE_SECRET           "0hgq1V61Vs7CK4sT0tR8WEclpV8Mvmrc"
-//#define PRODUCT_KEY             "a1GtyAJfVMd"
-//#define PRODUCT_SECRET          "AVpsn4P5LYq8DcDh"//kO4TV83FknaBh7nJ   //LW6HXkSlYM6SPsmV
-//#define DEVICE_NAME             "socket"
-//#define DEVICE_SECRET           "WsEXvrnQo0YnZfuul5lQtdqgbvUhrYDQ"
+//#define PRODUCT_KEY             "a1qXi2sExXZ"
+//#define PRODUCT_SECRET          "K6eqNW9rNDk2FFhd"//kO4TV83FknaBh7nJ   //LW6HXkSlYM6SPsmV
+//#define DEVICE_NAME             "SEL2SE5upsmbCCZJyjeA"
+//#define DEVICE_SECRET           "0hgq1V61Vs7CK4sT0tR8WEclpV8Mvmrc"
+/*socket*/
+#define PRODUCT_KEY             "a1GtyAJfVMd"
+#define PRODUCT_SECRET          "AVpsn4P5LYq8DcDh"//kO4TV83FknaBh7nJ   //LW6HXkSlYM6SPsmV
+#define DEVICE_NAME             "socket"
+#define DEVICE_SECRET           "WsEXvrnQo0YnZfuul5lQtdqgbvUhrYDQ"
+
+
 #elif 0
 #define PRODUCT_KEY             "b1iuHMGJYGI"
 #define PRODUCT_SECRET          "Na027DnOTFtkLfEz"
