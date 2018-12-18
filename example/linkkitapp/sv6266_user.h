@@ -1,11 +1,11 @@
 #ifndef __SV6266_USER_H__
 #define __SV6266_USER_H__
 
-#define KEY_WIFI_CONFIG     12//12  0
-#define LED_WIFI_STATUS     10//10  13
+#define KEY_WIFI_CONFIG     21//12  0
+#define LED_WIFI_STATUS     2//10  13
 #define LED_RYL1            8
 #define LED_RYL2            20
-#define LED_RYL3            2
+#define LED_RYL3            12
 #define RYL_CHANNAL_MAX     3
 
 #define TEST_LED            11
