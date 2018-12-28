@@ -422,11 +422,11 @@ static void dm_cm_msg_info_set_params_data(void *_self, char *params_data_buf)
         char value   = 0;
         char channal = 0;
         char *pstr   = NULL;
-        pstr = strchr(params_data_buf,'_');
+        /*pstr = strchr(params_data_buf,'_');
         if (pstr) {
             channal = *(pstr+1) - '0';
             switchParm[channal].channel = channal;
-        }
+        }*/
         pstr = strchr(params_data_buf,':');
 
         value = *(pstr+1) - '0';

@@ -25,10 +25,10 @@
 //#define DEVICE_NAME             "SEL2SE5upsmbCCZJyjeA"
 //#define DEVICE_SECRET           "0hgq1V61Vs7CK4sT0tR8WEclpV8Mvmrc"
 /*socket*/
-#define PRODUCT_KEY             "a1GtyAJfVMd"
-#define PRODUCT_SECRET          "AVpsn4P5LYq8DcDh"//kO4TV83FknaBh7nJ   //LW6HXkSlYM6SPsmV
-#define DEVICE_NAME             "socket"
-#define DEVICE_SECRET           "WsEXvrnQo0YnZfuul5lQtdqgbvUhrYDQ"
+#define PRODUCT_KEY             "a130Z3Wt8Wt"
+#define PRODUCT_SECRET          "kJ2A6Pq0lr01gdzV"//kO4TV83FknaBh7nJ   //LW6HXkSlYM6SPsmV
+#define DEVICE_NAME             "k99fEO8A7DPHrcSNIRih"
+#define DEVICE_SECRET           "bCQGlaazYkvmVib0HAosNzJqR9N5LdFK"
 
 
 #elif 0

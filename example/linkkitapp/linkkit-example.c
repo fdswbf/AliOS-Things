@@ -245,7 +245,7 @@ void ryl_service_event(input_event_t *eventinfo, void *priv_data)
     }
     LOG("\nryl service event code:%d,value:%d\n", eventinfo->code,eventinfo->value);
 
-    if (eventinfo->code == 0) {
+    /*if (eventinfo->code == 0) {
         upStreamData = 1;
         set_ryl_output(LED_RYL1,eventinfo->value);
     } else if (eventinfo->code == 1) {
@@ -254,7 +254,7 @@ void ryl_service_event(input_event_t *eventinfo, void *priv_data)
     } else if (eventinfo->code == 2) {
         upStreamData = 3;
         set_ryl_output(LED_RYL3,eventinfo->value);
-    } 
+    } */
 }
 
 
@@ -305,7 +305,7 @@ int application_start(int argc, char **argv)
     aos_register_event_filter(EV_KEY, linkkit_key_process, NULL);
     aos_register_event_filter(EV_WIFI, wifi_service_event, NULL);
     aos_register_event_filter(EV_YUNIO, cloud_service_event, NULL);
-    aos_register_event_filter(EV_RYL, ryl_service_event, NULL);
+    //aos_register_event_filter(EV_RYL, ryl_service_event, NULL);
 #ifdef CONFIG_AOS_CLI
     aos_cli_register_command(&resetcmd);
     aos_cli_register_command(&ncmd);

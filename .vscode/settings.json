@@ -13,6 +13,7 @@
     "aliosStudio.flashAllBin": false,
     "aliosStudio.isAosSource": true,
     "files.associations": {
-        "sv6266_user.h": "c"
+        "sv6266_user.h": "c",
+        "drv_tmr.h": "c"
     }
 }
